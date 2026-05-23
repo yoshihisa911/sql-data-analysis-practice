@@ -8,43 +8,48 @@ cursor.execute("""
 select
     u.user_name,
     o.billing_email,
-    count(*) as total_orders,
+    p.payment_method,
+    p.card_brand,
+    count(amount) as total_orders,
     sum(
         case
-            when o.amount >= 100000 then 1
+            when o.amount >= 200000 then 1
             else 0
         end
-    ) as high_risk_orders,
+    ) as high_amount_orders,
     sum(o.amount) as total_amount
-from 
+from
     orders as o
 join
-    users as u
+     users as u
 on
     o.billing_email = u.billing_email
+join 
+    payments as p
+on 
+    u.billing_email = p.billing_email
 group by
     o.billing_email
 having
     sum(o.amount) > (
-                select
+                select 
                     avg(total_amount)
                 from (
-                    select 
-                        billing_email,
-                        sum(o2.amount) as total_amount
-                    from 
-                        orders as o2
-                    group by 
-                          billing_email
-                    ) as user_totals
-                ) and 
-                     sum(
-                        case
-                            when o.amount >= 100000 then 1
-                            else 0
-                    end
-            ) >= 2
-               """)
+                        select o3.billing_email,
+                            sum(o3.amount) as total_amount
+                        from 
+                            orders as o3
+                        group by 
+                            o3.billing_email) as user_totals)
+                    and
+                sum(
+                    case
+                        when o.amount >= 200000 then 1
+                    else 0
+                end) >= 1  
+order by
+    sum(o.amount) DESC
+""")
 
 rows = cursor.fetchall()
 
