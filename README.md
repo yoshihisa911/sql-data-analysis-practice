@@ -1,6 +1,4 @@
-# sql-data-analysis-practice
-
-SQL Fraud Analysis Practice
+# sql-practice
 
 This repository contains SQL practice projects using orders, users, and payments tables.
 
@@ -11,4 +9,4 @@ Topics:
 - CASE WHEN
 - Correlated Subqueries
 
-The goal is to practice SQL for data analysis and fraud detection scenarios.
+The goal is to practice SQL queries and improve data analysis skills.
